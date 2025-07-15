@@ -3,7 +3,7 @@
     "description": "IronFlock Widget widget-switch",
     "license": "MIT",
     "author": "widget-switch",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "engines": {
         "node": "18.18.2",
         "npm": ">=10.0.2"
