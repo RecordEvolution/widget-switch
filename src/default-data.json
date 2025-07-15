@@ -1,29 +1,44 @@
 {
+    "title": "Machine Switch Panel",
+    "subTitle": "Main Line Controls",
     "dataseries": [
         {
-            "label": "Temperature",
-            "unit": "°C",
-            "precision": 2,
-            "styling": {},
-            "advanced": {
-                "averageLatest": 1
+            "label": "Lamp",
+            "stateMap": {
+                "on": ">1",
+                "off": "<=1"
+            },
+            "styling": {
+                "labelColor": "#000000",
+                "valueColor": "#00cc66"
             },
             "data": [
                 {
-                    "value": 90
+                    "tsp": "2025-07-15T10:00:00.000Z",
+                    "value": 1,
+                    "actionApp": "machineControlApp",
+                    "actionDevice": 1,
+                    "actionTopic": "lamp"
                 }
             ]
         },
         {
-            "label": "Pressure",
-            "unit": "Pa",
-            "styling": {},
-            "advanced": {
-                "averageLatest": 1
+            "label": "Cooling",
+            "stateMap": {
+                "on": "COOL_ON,1",
+                "off": "COOL_OFF,0"
+            },
+            "styling": {
+                "labelColor": "#0033cc",
+                "valueColor": "#0099ff"
             },
             "data": [
                 {
-                    "value": 80
+                    "tsp": "2025-07-15T10:05:00.000Z",
+                    "value": "COOL_ON",
+                    "actionApp": "coolingSystemApp",
+                    "actionDevice": 1,
+                    "actionTopic": "cooling"
                 }
             ]
         }

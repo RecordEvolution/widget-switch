@@ -8,57 +8,62 @@
 export type Title = string;
 export type Subtitle = string;
 /**
- * The label for the value.
+ * The label for the switch.
  */
 export type Label = string;
 /**
- * The unit of the value. e.g. °C or km/h
+ * The value or list of values that represent the ON state. You can also use an expression like <4 or >33 to specify a numeric range. If a value matches an ON and an OFF state, the ON state will be used.
  */
-export type Unit = string;
+export type ONValues = string;
 /**
- * Number of digits after the decimal point. (Default 0)
+ * The value or list of values that represent the OFF state. You can also use an expression like <4 or >33 to specify a numeric range. If a value matches an ON and an OFF state, the ON state will be used.
  */
-export type Precision = number;
+export type OFFValues = string;
 /**
- * Calculate the average over the given number of newest values. (If you use "Split data by", then per each of the pivot dataseries.) If not specified then the latest value is shown without modification.
- */
-export type AverageLatestValues = number;
-/**
- * If you provide timestamp data, the delivered value is only shown in the gauge when the age of the data is not older than the given maximum Latency in seconds.
- */
-export type MaximumLatency = number;
-/**
- * This should be an ISO String date like 2023-11-04T22:47:52.351152+00:00. Will only be used to detect data age of data.
+ * This should be an ISO String date like 2023-11-04T22:47:52.351152+00:00. Will only be used to detect age of data.
  */
 export type Timestamp = string;
-export type Value = number;
+export type Value = string;
+/**
+ * The action topic that is called when clicking the switch. The arguments will be True for ON and False for OFF. Refer to the app documentation for available topics to call.
+ */
+export type ActionTopic = string;
 /**
  * You can specify a column in the input data to autogenerate dataseries for each distinct entry in this column. E.g. if you have a table with columns [city, timestamp, temperature] and specify 'city' as split column, then you will get a value field for each city.
  */
 export type SplitDataBy = string;
 /**
- * The data used to draw this data series.
+ * The data for the switch state.
  */
-export type Data = {
+export type SwitchStateData = {
   tsp?: Timestamp;
   value?: Value;
+  actionApp?: ActionApp;
+  actionDevice?: ActionDeviceTarget;
+  actionTopic?: ActionTopic;
   pivot?: SplitDataBy;
   [k: string]: unknown;
 }[];
-export type ValueDisplays = {
+export type Switches = {
   label?: Label;
-  unit?: Unit;
-  precision?: Precision;
+  stateMap?: StateMap;
   styling?: Styling;
-  advanced?: AdvancedSettings;
-  data?: Data;
+  data?: SwitchStateData;
   [k: string]: unknown;
 }[];
 
 export interface InputData {
   title?: Title;
   subTitle?: Subtitle;
-  dataseries?: ValueDisplays;
+  dataseries?: Switches;
+  [k: string]: unknown;
+}
+/**
+ * Specify the values for the ON and OFF states. Any value that does not match to either an ON or OFF state will be considered as UNKNOWN.
+ */
+export interface StateMap {
+  on?: ONValues;
+  off?: OFFValues;
   [k: string]: unknown;
 }
 export interface Styling {
@@ -72,8 +77,15 @@ export interface LabelColor {
 export interface ValueColor {
   [k: string]: unknown;
 }
-export interface AdvancedSettings {
-  averageLatest?: AverageLatestValues;
-  maxLatency?: MaximumLatency;
+/**
+ * The app that should handle the click on the switch.
+ */
+export interface ActionApp {
+  [k: string]: unknown;
+}
+/**
+ * The device that should handele the click on the switch. The 'Device ID' column can be used here when using data driven mode.
+ */
+export interface ActionDeviceTarget {
   [k: string]: unknown;
 }

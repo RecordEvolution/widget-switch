@@ -1,7 +1,9 @@
 import { html, css, LitElement, PropertyValueMap } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
-import { property, state } from 'lit/decorators.js'
+import { customElement, property, state } from 'lit/decorators.js'
 import { InputData } from './definition-schema.js'
+import '@material/web/switch/switch.js'
+import { MdSwitch } from '@material/web/switch/switch.js'
 
 type Dataseries = Exclude<InputData['dataseries'], undefined>[number] & { needleValue?: number }
 type Data = Exclude<Dataseries['data'], undefined>[number]
@@ -9,7 +11,8 @@ type Theme = {
     theme_name: string
     theme_object: any
 }
-export class WidgetValue extends LitElement {
+@customElement('widget-switch-versionplaceholder')
+export class WidgetSwitch extends LitElement {
     @property({ type: Object })
     inputData?: InputData
 
@@ -51,14 +54,12 @@ export class WidgetValue extends LitElement {
         this.valueContainer = this?.shadowRoot?.querySelector('.value-container') as HTMLDivElement
 
         this.registerTheme(this.theme)
-        this.sizingSetup()
         this.transformData()
         this.applyData()
     }
 
     update(changedProperties: Map<string, any>) {
         if (changedProperties.has('inputData')) {
-            this.sizingSetup()
             this.transformData()
             this.applyData()
         }
@@ -79,96 +80,7 @@ export class WidgetValue extends LitElement {
             cssTextColor || this.theme?.theme_object?.title?.subtextStyle?.color || this.themeTitleColor
     }
 
-    sizingSetup() {
-        if (this.origWidth !== 0 && this.origHeight !== 0) return
-
-        const boxes = Array.from(
-            this?.shadowRoot?.querySelectorAll(
-                '.sizing-container > .single-value'
-            ) as NodeListOf<HTMLDivElement>
-        )
-
-        this.origWidth =
-            boxes?.map((b) => b.getBoundingClientRect().width).reduce((p, c) => (c > p ? c : p), 0) ?? 0
-        this.origHeight =
-            boxes?.map((b) => b.getBoundingClientRect().height).reduce((p, c) => (c > p ? c : p), 0) ?? 0
-    }
-
-    applyData() {
-        const userWidth = this.valueContainer?.getBoundingClientRect().width
-        const userHeight = this.valueContainer?.getBoundingClientRect().height
-        const count = this.dataSets.size
-
-        const width = this.origWidth
-        const height = this.origHeight
-        if (!userWidth || !userHeight || !width || !height) return
-
-        const fits = []
-        for (let c = 1; c <= count; c++) {
-            const r = Math.ceil(count / c)
-            const uwgap = userWidth - 12 * (c - 1)
-            const uhgap = userHeight - 12 * (r - 1)
-            const m = uwgap / width / c
-            const size = m * m * width * height * count
-            if (r * m * height <= uhgap) fits.push({ c, m, size, width, height, userWidth, userHeight })
-        }
-
-        for (let r = 1; r <= count; r++) {
-            const c = Math.ceil(count / r)
-            const uwgap = userWidth - 12 * (c - 1)
-            const uhgap = userHeight - 12 * (r - 1)
-            const m = uhgap / height / r
-            const size = m * m * width * height * count
-            if (c * m * width <= uwgap) fits.push({ r, m, size, width, height, userWidth, userHeight })
-        }
-        const maxSize = fits.reduce((p, c) => (c.size < p ? p : c.size), 0)
-        const fit = fits.find((f) => f.size === maxSize)
-        const modifier = fit?.m ?? 1
-        // console.log('FITS', fits, 'modifier', modifier, 'cols',fit?.c, 'rows', fit?.r, 'new size', fit?.size.toFixed(0), 'total space', (userWidth* userHeight).toFixed(0))
-
-        const boxes = Array.from(
-            this?.shadowRoot?.querySelectorAll(
-                '.value-container > .single-value'
-            ) as NodeListOf<HTMLDivElement>
-        )
-
-        boxes?.forEach((box) =>
-            box.setAttribute(
-                'style',
-                `width:${modifier * width}px; height:${modifier * height}px; padding:${modifier * 6}px`
-            )
-        )
-
-        boxes?.forEach((n) => {
-            const label: string | null = n.getAttribute('label')
-            const ds: Dataseries | undefined = this.dataSets.get(label ?? '')
-            const numberText = n.querySelector('.current-value') as HTMLDivElement
-            numberText.setAttribute(
-                'style',
-                `font-size: ${32 * modifier}px; 
-                color: ${ds?.styling?.valueColor || this.theme?.theme_object?.color?.[0] || this.themeTitleColor};`
-            )
-        })
-
-        boxes?.forEach((n) => {
-            const label: string | null = n.getAttribute('label')
-            const ds: Dataseries | undefined = this.dataSets.get(label ?? '')
-            const labelText = n.querySelector('.label') as HTMLDivElement
-            labelText.setAttribute(
-                'style',
-                `font-size: ${26 * modifier}px; 
-                color: ${ds?.styling?.labelColor || this.theme?.theme_object?.color?.[1] || this.themeSubtitleColor};`
-            )
-            const unitText = n.querySelector('.unit') as HTMLDivElement
-            unitText.setAttribute(
-                'style',
-                `font-size: ${26 * modifier}px; 
-                color: ${ds?.styling?.valueColor || this.theme?.theme_object?.color?.[0] || this.themeTitleColor};`
-            )
-        })
-
-        this.textActive = true
-    }
+    applyData() {}
 
     async transformData() {
         if (!this.inputData) return
@@ -181,46 +93,99 @@ export class WidgetValue extends LitElement {
             ?.forEach((ds) => {
                 // pivot data
                 const distincts = [...new Set(ds.data?.map((d: Data) => d.pivot))].sort() as string[]
-                ds.needleValue = undefined
+                ds.selected = undefined
+
                 distincts.forEach((piv) => {
-                    const prefix = piv ? `${piv} - ` : ''
+                    const prefix = piv ?? ''
+                    const label = ds.label ?? ''
+                    const value =
+                        distincts.length === 1 ? ds.data?.[0] : ds.data?.filter((d) => d.pivot === piv)?.[0]
                     const pds: Dataseries = {
-                        label: prefix + ds.label,
-                        order: ds.order,
-                        unit: ds.unit,
-                        precision: ds.precision,
-                        advanced: ds.advanced,
+                        label: prefix + (!!prefix && !!label ? ' - ' : '') + label,
+                        actionApp: value?.actionApp,
+                        actionDevice: value?.actionDevice,
+                        actionTopic: value?.actionTopic,
                         styling: ds.styling,
-                        data: distincts.length === 1 ? ds.data : ds.data?.filter((d) => d.pivot === piv),
-                        needleValue: undefined
+                        selected: this.isSelected(ds, value)
                     }
                     this.dataSets.set(pds.label ?? '', pds)
                 })
             })
-
-        // filter latest values and calculate average
-        this.dataSets.forEach((ds, label) => {
-            ds.advanced ??= {}
-            if (typeof ds.advanced?.averageLatest !== 'number' || !isNaN(ds.advanced?.averageLatest))
-                ds.advanced.averageLatest = 1
-
-            const data = ds?.data?.slice(-ds?.advanced?.averageLatest || -1) ?? []
-            const values = (data?.map((d) => d.value)?.filter((p) => p !== undefined) ?? []) as number[]
-            const average = values.reduce((p, c) => p + c, 0) / values.length
-
-            // Check age of data Latency
-            const tsp = Date.parse(data?.[0]?.tsp ?? '')
-            if (isNaN(tsp)) {
-                const now = new Date().getTime()
-                if (now - tsp > (ds.advanced?.maxLatency ?? Infinity) * 1000) ds.needleValue = undefined
-            }
-
-            ds.needleValue = average
-        })
-
-        this.requestUpdate()
-        await this.updateComplete
         // console.log('Value Datasets', this.dataSets)
+    }
+
+    isSelected(ds: Dataseries, value?: Data): boolean | undefined {
+        if (!value) return undefined
+        const on = ds?.stateMap?.on
+        if (on?.startsWith('<=')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(on.substring(2))
+            return isNaN(val) || isNaN(comp) ? undefined : val <= comp
+        }
+        if (on?.startsWith('<')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(on.substring(1))
+            return isNaN(val) || isNaN(comp) ? undefined : val < comp
+        }
+        if (on?.startsWith('>=')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(on.substring(2))
+            return isNaN(val) || isNaN(comp) ? undefined : val >= comp
+        }
+        if (on?.startsWith('>')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(on.substring(1))
+            return isNaN(val) || isNaN(comp) ? undefined : val > comp
+        }
+
+        const off = ds?.stateMap?.off
+        if (off?.startsWith('<=')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(off.substring(2))
+            return isNaN(val) || isNaN(comp) ? undefined : val > comp
+        }
+        if (off?.startsWith('<')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(off.substring(1))
+            return isNaN(val) || isNaN(comp) ? undefined : val <= comp
+        }
+        if (off?.startsWith('>=')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(off.substring(2))
+            return isNaN(val) || isNaN(comp) ? undefined : val < comp
+        }
+        if (off?.startsWith('>')) {
+            const val = parseFloat(value.value ?? '')
+            const comp = parseFloat(off.substring(1))
+            return isNaN(val) || isNaN(comp) ? undefined : val <= comp
+        }
+
+        const onValues = on?.split(',').map((v) => v.trim().replace('"', '').replace("'", '')) ?? []
+        if (onValues.includes(String(value.value) ?? '')) return true
+
+        const offValues = off?.split(',').map((v) => v.trim().replace('"', '').replace("'", '')) ?? []
+        if (offValues.includes(String(value.value) ?? '')) return false
+
+        return undefined
+    }
+
+    handleActionSubmit(e: any) {
+        const switchEl = e.target
+        const payload = {
+            args: switchEl?.selected,
+            actionApp: switchEl?.actionApp,
+            actionDevice: switchEl?.actionDevice,
+            actionTopic: switchEl?.actionTopic,
+            label: switchEl?.label
+        }
+        console.log('Action Submit', payload)
+        this.dispatchEvent(
+            new CustomEvent('action-submit', {
+                detail: payload,
+                bubbles: false,
+                composed: false
+            })
+        )
     }
 
     static styles = css`
@@ -274,39 +239,13 @@ export class WidgetValue extends LitElement {
             gap: 12px;
         }
 
-        .single-value {
+        .switch {
             overflow: hidden;
-            position: relative;
-            align-items: end;
-            padding: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             box-sizing: border-box;
             /* border-left: 4px solid #ddd; */
-        }
-
-        .current-value {
-            font-size: 32px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .label,
-        .unit {
-            font-weight: 300;
-            font-size: 26px;
-            white-space: nowrap;
-        }
-
-        .sizing-container {
-            position: absolute;
-            left: 10000px;
-            display: flex;
-            line-height: 0.9;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            overflow: hidden;
-            gap: 12px;
         }
 
         .no-data {
@@ -336,29 +275,7 @@ export class WidgetValue extends LitElement {
                         ${this.inputData?.subTitle}
                     </p>
                 </header>
-                <div class="sizing-container">
-                    ${repeat(
-                        this.dataSets,
-                        ([label]) => label,
-                        ([label, ds]) => {
-                            return html`
-                                <div class="single-value" label="${label}">
-                                    <div class="label paging" ?active=${this.textActive}>${label}</div>
-                                    <span
-                                        class="current-value paging"
-                                        ?active=${this.textActive}
-                                        style="color: ${this.themeTitleColor}"
-                                    >
-                                        ${isNaN(ds.needleValue ?? 0) || ds.needleValue === undefined
-                                            ? ''
-                                            : ds.needleValue.toFixed(Math.max(0, ds.precision ?? 0))}
-                                        <span class="unit paging" ?active=${this.textActive}>${ds.unit}</span>
-                                    </span>
-                                </div>
-                            `
-                        }
-                    )}
-                </div>
+
                 <div class="paging no-data" ?active=${!this.dataSets.size}>No Data</div>
                 <div class="value-container">
                     ${repeat(
@@ -366,18 +283,19 @@ export class WidgetValue extends LitElement {
                         ([label]) => label,
                         ([label, ds]) => {
                             return html`
-                                <div class="single-value" label="${label}">
-                                    <div class="label paging" ?active=${this.textActive}>${label}</div>
-                                    <span
-                                        class="current-value paging"
-                                        ?active=${this.textActive}
-                                        style="color: ${this.themeTitleColor}"
-                                    >
-                                        ${isNaN(ds.needleValue ?? 0) || ds.needleValue === undefined
-                                            ? ''
-                                            : ds.needleValue.toFixed(Math.max(0, ds.precision ?? 0))}
-                                        <span class="unit paging" ?active=${this.textActive}>${ds.unit}</span>
-                                    </span>
+                                <div class="switch" label="${label}">
+                                    ${label}
+                                    <label
+                                        ><md-switch
+                                            aria-label="${label}"
+                                            ?selected="${!!ds.selected}"
+                                            .actionApp="${ds?.actionApp}"
+                                            .actionDevice="${ds?.actionDevice}"
+                                            .actionTopic="${ds?.actionTopic}"
+                                            .label="${label}"
+                                            @change="${this.handleActionSubmit}"
+                                        ></md-switch
+                                    ></label>
                                 </div>
                             `
                         }
@@ -387,5 +305,3 @@ export class WidgetValue extends LitElement {
         `
     }
 }
-
-window.customElements.define('widget-switch-versionplaceholder', WidgetValue)

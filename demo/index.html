@@ -2,7 +2,7 @@
 <html lang="en-GB">
     <head>
         <meta charset="utf-8" />
-        <title>Value</title>
+        <title>Switch</title>
         <style>
             html,
             body {
@@ -41,8 +41,8 @@
             import '../dist/widget-switch.js'
 
             const data = await fetch('../src/default-data.json').then((res) => res.json())
-            const themeObject = await fetch('themes/chalk.json').then((res) => res.json())
-            const theme = { theme_name: 'chalk', theme_object: themeObject }
+            const themeObject = await fetch('themes/vintage.json').then((res) => res.json())
+            const theme = { theme_name: 'vintage', theme_object: themeObject }
             render(
                 html`
                     <${tag} .theme="${theme}" .inputData=${data}>
@@ -53,7 +53,7 @@
                 document.getElementById('demo')
             )
             const widget = document.getElementById('demo').children[0]
-            const keyPathsToRandomize = ['dataseries.0.data.0.value', 'settings.title']
+            const keyPathsToRandomize = ['dataseries.0.data.0.value']
             const inter = setInterval(() => {
                 const randomizedObj = randomizeObjectValues(data, keyPathsToRandomize)
 
