@@ -1,0 +1,119 @@
+{
+    "title": "InputData",
+    "type": "object",
+    "properties": {
+        "title": {
+            "title": "Title",
+            "type": "string",
+            "order": 1
+        },
+        "subTitle": {
+            "title": "Subtitle",
+            "type": "string",
+            "order": 2
+        },
+        "dataseries": {
+            "title": "Value Displays",
+            "type": "array",
+            "dataDrivenDisabled": true,
+            "order": 2,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "title": "Label",
+                        "description": "The label for the value.",
+                        "type": "string",
+                        "required": true,
+                        "order": 1
+                    },
+                    "unit": {
+                        "title": "Unit",
+                        "description": "The unit of the value. e.g. °C or km/h",
+                        "type": "string",
+                        "dataDrivenDisabled": false,
+                        "order": 2
+                    },
+                    "precision": {
+                        "title": "Precision",
+                        "description": "Number of digits after the decimal point. (Default 0)",
+                        "type": "number",
+                        "dataDrivenDisabled": true,
+                        "order": 3
+                    },
+                    "styling": {
+                        "title": "Styling",
+                        "description": "",
+                        "type": "object",
+                        "order": 6,
+                        "properties": {
+                            "labelColor": {
+                                "title": "Label Color",
+                                "type": "color",
+                                "color": true,
+                                "order": 4
+                            },
+                            "valueColor": {
+                                "title": "Value Color",
+                                "type": "color",
+                                "color": true,
+                                "order": 5
+                            }
+                        }
+                    },
+                    "advanced": {
+                        "title": "Advanced Settings",
+                        "description": "",
+                        "type": "object",
+                        "order": 7,
+                        "properties": {
+                            "averageLatest": {
+                                "title": "Average Latest Values",
+                                "description": "Calculate the average over the given number of newest values. (If you use \"Split data by\", then per each of the pivot dataseries.) If not specified then the latest value is shown without modification.",
+                                "type": "number",
+                                "dataDrivenDisabled": true,
+                                "order": 6
+                            },
+                            "maxLatency": {
+                                "title": "Maximum Latency",
+                                "description": "If you provide timestamp data, the delivered value is only shown in the gauge when the age of the data is not older than the given maximum Latency in seconds.",
+                                "type": "number",
+                                "dataDrivenDisabled": true,
+                                "order": 7
+                            }
+                        }
+                    },
+                    "data": {
+                        "title": "Data",
+                        "description": "The data used to draw this data series.",
+                        "type": "array",
+                        "order": 4,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "tsp": {
+                                    "title": "Timestamp",
+                                    "description": "This should be an ISO String date like 2023-11-04T22:47:52.351152+00:00. Will only be used to detect data age of data.",
+                                    "type": "string",
+                                    "order": 1
+                                },
+                                "value": {
+                                    "title": "Value",
+                                    "type": "number",
+                                    "required": true,
+                                    "order": 1
+                                },
+                                "pivot": {
+                                    "title": "Split Data by",
+                                    "description": "You can specify a column in the input data to autogenerate dataseries for each distinct entry in this column. E.g. if you have a table with columns [city, timestamp, temperature] and specify 'city' as split column, then you will get a value field for each city.",
+                                    "type": "string",
+                                    "order": 2
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
