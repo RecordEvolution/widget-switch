@@ -90,6 +90,7 @@
                                 "actionApp": {
                                     "title": "Action App",
                                     "description": "The app that should handle the click on the switch.",
+                                    "dataDrivenDisabled": true,
                                     "type": "actionApp",
                                     "order": 3
                                 },

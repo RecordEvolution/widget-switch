@@ -99,7 +99,9 @@ export class WidgetSwitch extends LitElement {
                     const prefix = piv ?? ''
                     const label = ds.label ?? ''
                     const value =
-                        distincts.length === 1 ? ds.data?.[0] : ds.data?.filter((d) => d.pivot === piv)?.[0]
+                        distincts.length === 1
+                            ? ds.data?.at(-1)
+                            : ds.data?.filter((d) => d.pivot === piv)?.at(-1)
                     const pds: Dataseries = {
                         label: prefix + (!!prefix && !!label ? ' - ' : '') + label,
                         actionApp: value?.actionApp,
@@ -178,7 +180,6 @@ export class WidgetSwitch extends LitElement {
             actionTopic: switchEl?.actionTopic,
             label: switchEl?.label
         }
-        console.log('Action Submit', payload)
         this.dispatchEvent(
             new CustomEvent('action-submit', {
                 detail: payload,

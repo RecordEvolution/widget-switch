@@ -2,7 +2,7 @@
     "name": "@record-evolution/widget-switch",
     "description": "IronFlock Widget widget-switch",
     "license": "MIT",
-    "author": "widget-switch",
+    "author": "Record Evolution GmbH",
     "version": "1.0.1",
     "engines": {
         "node": "18.18.2",
@@ -10,6 +10,7 @@
     },
     "type": "module",
     "main": "dist/widget-switch.js",
+    "module": "dist/widget-switch.js",
     "types": "dist/src/widget-switch.d.ts",
     "files": [
         "dist",

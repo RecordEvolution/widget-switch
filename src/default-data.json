@@ -5,8 +5,8 @@
         {
             "label": "Lamp",
             "stateMap": {
-                "on": ">1",
-                "off": "<=1"
+                "on": ">=1",
+                "off": "<1"
             },
             "styling": {
                 "labelColor": "#000000",
