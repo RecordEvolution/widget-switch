@@ -20,12 +20,11 @@ export type ONValues = string;
  */
 export type OFFValues = string;
 /**
- * This should be an ISO String date like 2023-11-04T22:47:52.351152+00:00. Will only be used to detect age of data.
+ * Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch state consistent with the backend data.
  */
-export type Timestamp = string;
-export type Value = string;
+export type SwitchState = string;
 /**
- * The action topic that is called when clicking the switch. The arguments will be True for ON and False for OFF. Refer to the app documentation for available topics to call.
+ * The action topic that is called when clicking the switch. The arguments will be True for ON and False for OFF. Refer to your chosen apps documentation for available topics to call.
  */
 export type ActionTopic = string;
 /**
@@ -36,8 +35,7 @@ export type SplitDataBy = string;
  * The data for the switch state.
  */
 export type SwitchStateData = {
-  tsp?: Timestamp;
-  value?: Value;
+  value?: SwitchState;
   actionApp?: ActionApp;
   actionDevice?: ActionDeviceTarget;
   actionTopic?: ActionTopic;

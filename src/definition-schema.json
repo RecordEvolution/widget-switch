@@ -75,16 +75,11 @@
                         "items": {
                             "type": "object",
                             "properties": {
-                                "tsp": {
-                                    "title": "Timestamp",
-                                    "description": "This should be an ISO String date like 2023-11-04T22:47:52.351152+00:00. Will only be used to detect age of data.",
-                                    "type": "string",
-                                    "order": 1
-                                },
                                 "value": {
-                                    "title": "Value",
+                                    "title": "Switch State",
                                     "type": "string",
-                                    "required": true,
+                                    "description": "Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch state consistent with the backend data.",
+                                    "required": false,
                                     "order": 2
                                 },
                                 "actionApp": {
@@ -102,7 +97,7 @@
                                 },
                                 "actionTopic": {
                                     "title": "Action Topic",
-                                    "description": "The action topic that is called when clicking the switch. The arguments will be True for ON and False for OFF. Refer to the app documentation for available topics to call.",
+                                    "description": "The action topic that is called when clicking the switch. The arguments will be True for ON and False for OFF. Refer to your chosen apps documentation for available topics to call.",
                                     "type": "string",
                                     "order": 5
                                 },

@@ -277,7 +277,6 @@ export class WidgetSwitch extends LitElement {
                     </p>
                 </header>
 
-                <div class="paging no-data" ?active=${!this.dataSets.size}>No Data</div>
                 <div class="value-container">
                     ${repeat(
                         [...this.dataSets.entries()].sort(),
@@ -287,7 +286,7 @@ export class WidgetSwitch extends LitElement {
                                 <div class="switch" label="${label}">
                                     ${label}
                                     <label
-                                        ><md-switch
+                                        ><mdif3-switch
                                             aria-label="${label}"
                                             ?selected="${!!ds.selected}"
                                             .actionApp="${ds?.actionApp}"
@@ -295,7 +294,7 @@ export class WidgetSwitch extends LitElement {
                                             .actionTopic="${ds?.actionTopic}"
                                             .label="${label}"
                                             @change="${this.handleActionSubmit}"
-                                        ></md-switch
+                                        ></mdif3-switch
                                     ></label>
                                 </div>
                             `

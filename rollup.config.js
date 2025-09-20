@@ -17,7 +17,6 @@ export default {
         banner: `/* @license Copyright (c) 2023 Record Evolution GmbH. All rights reserved.*/`,
         format: 'esm'
     },
-    external: (id) => id.startsWith('@material/web/'),
 
     plugins: [
         replace({
