@@ -8,19 +8,14 @@
                 "on": ">=1",
                 "off": "<1"
             },
+            "value": 1,
+            "actionApp": "machineControlApp",
+            "actionDevice": 1,
+            "actionTopic": "lamp",
             "styling": {
                 "labelColor": "#000000",
                 "valueColor": "#00cc66"
-            },
-            "data": [
-                {
-                    "tsp": "2025-07-15T10:00:00.000Z",
-                    "value": 1,
-                    "actionApp": "machineControlApp",
-                    "actionDevice": 1,
-                    "actionTopic": "lamp"
-                }
-            ]
+            }
         },
         {
             "label": "Cooling",
@@ -28,19 +23,14 @@
                 "on": "COOL_ON,1",
                 "off": "COOL_OFF,0"
             },
+            "value": "COOL_ON",
+            "actionApp": "coolingSystemApp",
+            "actionDevice": 1,
+            "actionTopic": "cooling",
             "styling": {
                 "labelColor": "#0033cc",
                 "valueColor": "#0099ff"
-            },
-            "data": [
-                {
-                    "tsp": "2025-07-15T10:05:00.000Z",
-                    "value": "COOL_ON",
-                    "actionApp": "coolingSystemApp",
-                    "actionDevice": 1,
-                    "actionTopic": "cooling"
-                }
-            ]
+            }
         }
     ]
 }

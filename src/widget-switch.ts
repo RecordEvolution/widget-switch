@@ -6,7 +6,6 @@ import '@material/web/switch/switch.js'
 import { MdSwitch } from '@material/web/switch/switch.js'
 
 type Dataseries = Exclude<InputData['dataseries'], undefined>[number] & { needleValue?: number }
-type Data = Exclude<Dataseries['data'], undefined>[number]
 type Theme = {
     theme_name: string
     theme_object: any
@@ -90,83 +89,79 @@ export class WidgetSwitch extends LitElement {
         this.dataSets = new Map()
         this.inputData?.dataseries
             // ?.sort((a, b) => a.order - b.order)
-            ?.forEach((ds) => {
+            ?.forEach((ds, idx) => {
                 // pivot data
-                const distincts = [...new Set(ds.data?.map((d: Data) => d.pivot))].sort() as string[]
                 ds.selected = undefined
-
-                distincts.forEach((piv) => {
-                    const prefix = piv ?? ''
-                    const label = ds.label ?? ''
-                    const value =
-                        distincts.length === 1
-                            ? ds.data?.at(-1)
-                            : ds.data?.filter((d) => d.pivot === piv)?.at(-1)
-                    const pds: Dataseries = {
-                        label: prefix + (!!prefix && !!label ? ' - ' : '') + label,
-                        actionApp: value?.actionApp,
-                        actionDevice: value?.actionDevice,
-                        actionTopic: value?.actionTopic,
-                        styling: ds.styling,
-                        selected: this.isSelected(ds, value)
-                    }
-                    this.dataSets.set(pds.label ?? '', pds)
-                })
+                let label = ds.label
+                if (this.dataSets.has(label ?? '')) {
+                    label += '-' + idx
+                }
+                const pds: Dataseries = {
+                    label: label,
+                    actionApp: ds?.actionApp,
+                    actionDevice: ds?.actionDevice,
+                    actionTopic: ds?.actionTopic,
+                    multiChart: ds.multiChart,
+                    styling: ds.styling,
+                    selected: this.isSelected(ds)
+                }
+                this.dataSets.set(pds.label ?? '', pds)
             })
         // console.log('Value Datasets', this.dataSets)
     }
 
-    isSelected(ds: Dataseries, value?: Data): boolean | undefined {
-        if (!value) return undefined
+    isSelected(ds: Dataseries): boolean | undefined {
+        const value = ds.value
+        if (value === undefined) return undefined
         const on = ds?.stateMap?.on
         if (on?.startsWith('<=')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(on.substring(2))
             return isNaN(val) || isNaN(comp) ? undefined : val <= comp
         }
         if (on?.startsWith('<')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(on.substring(1))
             return isNaN(val) || isNaN(comp) ? undefined : val < comp
         }
         if (on?.startsWith('>=')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(on.substring(2))
             return isNaN(val) || isNaN(comp) ? undefined : val >= comp
         }
         if (on?.startsWith('>')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(on.substring(1))
             return isNaN(val) || isNaN(comp) ? undefined : val > comp
         }
 
         const off = ds?.stateMap?.off
         if (off?.startsWith('<=')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(off.substring(2))
             return isNaN(val) || isNaN(comp) ? undefined : val > comp
         }
         if (off?.startsWith('<')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(off.substring(1))
             return isNaN(val) || isNaN(comp) ? undefined : val <= comp
         }
         if (off?.startsWith('>=')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(off.substring(2))
             return isNaN(val) || isNaN(comp) ? undefined : val < comp
         }
         if (off?.startsWith('>')) {
-            const val = parseFloat(value.value ?? '')
+            const val = parseFloat(value ?? '')
             const comp = parseFloat(off.substring(1))
             return isNaN(val) || isNaN(comp) ? undefined : val <= comp
         }
 
         const onValues = on?.split(',').map((v) => v.trim().replace('"', '').replace("'", '')) ?? []
-        if (onValues.includes(String(value.value) ?? '')) return true
+        if (onValues.includes(String(value) ?? '')) return true
 
         const offValues = off?.split(',').map((v) => v.trim().replace('"', '').replace("'", '')) ?? []
-        if (offValues.includes(String(value.value) ?? '')) return false
+        if (offValues.includes(String(value) ?? '')) return false
 
         return undefined
     }

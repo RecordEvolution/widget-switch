@@ -20,33 +20,21 @@ export type ONValues = string;
  */
 export type OFFValues = string;
 /**
- * Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch state consistent with the backend data.
+ * Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch visual state consistent with its physical state.
  */
 export type SwitchState = string;
 /**
- * The action topic that is called when clicking the switch. The arguments will be True for ON and False for OFF. Refer to your chosen apps documentation for available topics to call.
+ * The action topic that is called at the selected app at the selected device when clicking the switch. The arguments will be True for 'ON' and False for 'OFF'. Refer to the documentation of the app for available topics to call.
  */
-export type ActionTopic = string;
-/**
- * You can specify a column in the input data to autogenerate dataseries for each distinct entry in this column. E.g. if you have a table with columns [city, timestamp, temperature] and specify 'city' as split column, then you will get a value field for each city.
- */
-export type SplitDataBy = string;
-/**
- * The data for the switch state.
- */
-export type SwitchStateData = {
-  value?: SwitchState;
-  actionApp?: ActionApp;
-  actionDevice?: ActionDeviceTarget;
-  actionTopic?: ActionTopic;
-  pivot?: SplitDataBy;
-  [k: string]: unknown;
-}[];
+export type ActionAppTopic = string;
 export type Switches = {
   label?: Label;
   stateMap?: StateMap;
+  value?: SwitchState;
+  actionDevice?: ActionDeviceTarget;
+  actionApp?: ActionApp;
+  actionTopic?: ActionAppTopic;
   styling?: Styling;
-  data?: SwitchStateData;
   [k: string]: unknown;
 }[];
 
@@ -64,6 +52,18 @@ export interface StateMap {
   off?: OFFValues;
   [k: string]: unknown;
 }
+/**
+ * The device that should handle the click on the switch. The 'Device ID' column can be used here when using data driven mode.
+ */
+export interface ActionDeviceTarget {
+  [k: string]: unknown;
+}
+/**
+ * The app that should handle the click on the switch.
+ */
+export interface ActionApp {
+  [k: string]: unknown;
+}
 export interface Styling {
   labelColor?: LabelColor;
   valueColor?: ValueColor;
@@ -73,17 +73,5 @@ export interface LabelColor {
   [k: string]: unknown;
 }
 export interface ValueColor {
-  [k: string]: unknown;
-}
-/**
- * The app that should handle the click on the switch.
- */
-export interface ActionApp {
-  [k: string]: unknown;
-}
-/**
- * The device that should handele the click on the switch. The 'Device ID' column can be used here when using data driven mode.
- */
-export interface ActionDeviceTarget {
   [k: string]: unknown;
 }

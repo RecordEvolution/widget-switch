@@ -15,8 +15,7 @@
         "dataseries": {
             "title": "Switches",
             "type": "array",
-            "dataDrivenDisabled": true,
-            "order": 2,
+            "order": 3,
             "items": {
                 "type": "object",
                 "properties": {
@@ -31,7 +30,7 @@
                         "description": "Specify the values for the ON and OFF states. Any value that does not match to either an ON or OFF state will be considered as UNKNOWN.",
                         "type": "object",
                         "required": true,
-                        "order": 3,
+                        "order": 2,
                         "properties": {
                             "on": {
                                 "title": "ON Values",
@@ -47,11 +46,37 @@
                             }
                         }
                     },
+                    "value": {
+                        "title": "Switch State",
+                        "type": "string",
+                        "description": "Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch visual state consistent with its physical state.",
+                        "required": false,
+                        "order": 3
+                    },
+                    "actionDevice": {
+                        "title": "Action Device Target",
+                        "description": "The device that should handle the click on the switch. The 'Device ID' column can be used here when using data driven mode.",
+                        "type": "actionDevice",
+                        "order": 4
+                    },
+                    "actionApp": {
+                        "title": "Action App",
+                        "description": "The app that should handle the click on the switch.",
+                        "dataDrivenDisabled": true,
+                        "type": "actionApp",
+                        "order": 5
+                    },
+                    "actionTopic": {
+                        "title": "Action App Topic",
+                        "description": "The action topic that is called at the selected app at the selected device when clicking the switch. The arguments will be True for 'ON' and False for 'OFF'. Refer to the documentation of the app for available topics to call.",
+                        "type": "string",
+                        "order": 6
+                    },
                     "styling": {
                         "title": "Styling",
                         "description": "",
                         "type": "object",
-                        "order": 6,
+                        "order": 9,
                         "properties": {
                             "labelColor": {
                                 "title": "Label Color",
@@ -64,49 +89,6 @@
                                 "type": "color",
                                 "color": true,
                                 "order": 5
-                            }
-                        }
-                    },
-                    "data": {
-                        "title": "Switch State Data",
-                        "description": "The data for the switch state.",
-                        "type": "array",
-                        "order": 4,
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "value": {
-                                    "title": "Switch State",
-                                    "type": "string",
-                                    "description": "Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch state consistent with the backend data.",
-                                    "required": false,
-                                    "order": 2
-                                },
-                                "actionApp": {
-                                    "title": "Action App",
-                                    "description": "The app that should handle the click on the switch.",
-                                    "dataDrivenDisabled": true,
-                                    "type": "actionApp",
-                                    "order": 3
-                                },
-                                "actionDevice": {
-                                    "title": "Action Device Target",
-                                    "description": "The device that should handele the click on the switch. The 'Device ID' column can be used here when using data driven mode.",
-                                    "type": "actionDevice",
-                                    "order": 4
-                                },
-                                "actionTopic": {
-                                    "title": "Action Topic",
-                                    "description": "The action topic that is called when clicking the switch. The arguments will be True for ON and False for OFF. Refer to your chosen apps documentation for available topics to call.",
-                                    "type": "string",
-                                    "order": 5
-                                },
-                                "pivot": {
-                                    "title": "Split Data by",
-                                    "description": "You can specify a column in the input data to autogenerate dataseries for each distinct entry in this column. E.g. if you have a table with columns [city, timestamp, temperature] and specify 'city' as split column, then you will get a value field for each city.",
-                                    "type": "string",
-                                    "order": 6
-                                }
                             }
                         }
                     }
