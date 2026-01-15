@@ -1,104 +1,128 @@
-# \<widget-switch>
+# widget-switch
 
-This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
+IronFlock widget: A Lit 3.x web component that renders toggle switches using Material Design 3 components. Supports multiple switches with configurable state mapping and IoT device action triggers.
+
+![screenshot](thumbnail.png)
 
 ## Installation
 
 ```bash
-npm i widget-switch
+npm i @record-evolution/widget-switch
 ```
+
+**Peer Dependencies:** This widget requires `@material/web` to be available at runtime via import map or bundled separately.
 
 ## Usage
 
 ```html
 <script type="module">
-  import 'widget-switch/widget-switch.js';
+    import '@record-evolution/widget-switch'
 </script>
 
-<widget-switch></widget-switch>
+<widget-switch-1.1.1></widget-switch-1.1.1>
 ```
 
-## Expected data format
+> **Note:** The element tag includes the version number (e.g., `widget-switch-1.1.1`). This is replaced at build time via `@rollup/plugin-replace`.
 
-The following format represents the available data :
-```js
-data: {
-  settings: {
-    title: string,
-    subTitle: string,
-    minGauge: number,
-    maxGauge: number,
-    style: {
-      needleColor: string,
-      sections: number,
-      backgroundColor: string[]
-    }
-  }
-  gaugeValue: Number
+## Configuration
+
+The widget accepts an `inputData` property with the following structure:
+
+```typescript
+interface InputData {
+    title?: string
+    subTitle?: string
+    dataseries?: Array<{
+        label?: string
+        value?: string
+        stateMap?: {
+            on: string // Value(s) representing ON state
+            off: string // Value(s) representing OFF state
+        }
+        actionDevice?: string
+        actionApp?: string
+        actionTopic?: string
+        styling?: {
+            labelColor?: string
+            valueColor?: string
+        }
+    }>
 }
 ```
 
-## Interfaces
+## State Mapping
 
-```ts
-  interface InputData {
-    settings: Settings
-    gaugeValue: number
-  }
-```
-```ts
-  interface Settings {
-    title: string,
-    subTitle: string,
-    minGauge: number,
-    maxGauge: number,
-    style: Style
-  }
-```
-```ts
-  interface Style {
-    needleColor: string,
-    sections: number,
-    backgroundColor: string[]
-  }
+The `stateMap` configuration determines how values are interpreted as ON/OFF states:
+
+**Exact values:**
+
+```json
+{ "on": "true, 1, active", "off": "false, 0, inactive" }
 ```
 
-## Style options
-The following options are available for styling the value graph.
-The `sections` option splits the value area into by default three same sized sections. Therefore three different colors can be provided to the `backgroundColor` by default.
-```
-  interface Style {
-    needleColor: string,
-    sections: number,
-    backgroundColor: string[]
-  }
+**Numeric comparisons:**
+
+```json
+{ "on": ">50", "off": "<=50" }
+{ "on": ">=100", "off": "<100" }
 ```
 
-## Linting and formatting
+Supported operators: `<`, `<=`, `>`, `>=`
 
-To scan the project for linting and formatting errors, run
+## Action Events
+
+When a switch is toggled, the widget dispatches an `action-submit` custom event:
+
+```javascript
+element.addEventListener('action-submit', (e) => {
+    console.log(e.detail)
+    // {
+    //   args: true/false,      // New switch state
+    //   actionApp: "...",      // Target app
+    //   actionDevice: "...",   // Target device ID
+    //   actionTopic: "...",    // Action topic to call
+    //   label: "..."           // Switch label
+    // }
+})
+```
+
+## Theming
+
+The widget supports theming via CSS custom properties or the `theme` property:
+
+**CSS Custom Properties:**
+
+```css
+widget-switch-1.1.1 {
+    --re-text-color: #333;
+    --re-tile-background-color: #fff;
+}
+```
+
+**Theme Object:**
+
+```javascript
+element.theme = {
+    theme_name: 'dark',
+    theme_object: {
+        backgroundColor: '#1a1a1a',
+        title: {
+            textStyle: { color: '#fff' },
+            subtextStyle: { color: '#aaa' }
+        }
+    }
+}
+```
+
+## Development
 
 ```bash
-npm run lint
+npm run start    # Dev server at localhost:8000/demo/
+npm run build    # Production build to dist/
+npm run types    # Regenerate TypeScript types from schema
+npm run release  # Build, bump version, push to git with tag
 ```
 
-To automatically fix linting and formatting errors, run
+## License
 
-```bash
-npm run format
-```
-
-
-## Tooling configs
-
-For most of the tools, the configuration is in the `package.json` to reduce the amount of files in your project.
-
-If you customize the configuration a lot, you can consider moving them to individual files.
-
-## Local Demo with `web-dev-server`
-
-```bash
-npm start
-```
-
-To run a local development server that serves the basic demo located in `demo/index.html`
+MIT

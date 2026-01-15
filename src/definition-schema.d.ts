@@ -28,50 +28,50 @@ export type SwitchState = string;
  */
 export type ActionAppTopic = string;
 export type Switches = {
-  label?: Label;
-  stateMap?: StateMap;
-  value?: SwitchState;
-  actionDevice?: ActionDeviceTarget;
-  actionApp?: ActionApp;
-  actionTopic?: ActionAppTopic;
-  styling?: Styling;
-  [k: string]: unknown;
+    label?: Label;
+    stateMap?: StateMap;
+    value?: SwitchState;
+    actionDevice?: ActionDeviceTarget;
+    actionApp?: ActionApp;
+    actionTopic?: ActionAppTopic;
+    styling?: Styling;
+    [k: string]: unknown;
 }[];
 
 export interface InputData {
-  title?: Title;
-  subTitle?: Subtitle;
-  dataseries?: Switches;
-  [k: string]: unknown;
+    title?: Title;
+    subTitle?: Subtitle;
+    dataseries?: Switches;
+    [k: string]: unknown;
 }
 /**
  * Specify the values for the ON and OFF states. Any value that does not match to either an ON or OFF state will be considered as UNKNOWN.
  */
 export interface StateMap {
-  on?: ONValues;
-  off?: OFFValues;
-  [k: string]: unknown;
+    on?: ONValues;
+    off?: OFFValues;
+    [k: string]: unknown;
 }
 /**
  * The device that should handle the click on the switch. The 'Device ID' column can be used here when using data driven mode.
  */
 export interface ActionDeviceTarget {
-  [k: string]: unknown;
+    [k: string]: unknown;
 }
 /**
  * The app that should handle the click on the switch.
  */
 export interface ActionApp {
-  [k: string]: unknown;
+    [k: string]: unknown;
 }
 export interface Styling {
-  labelColor?: LabelColor;
-  valueColor?: ValueColor;
-  [k: string]: unknown;
+    labelColor?: LabelColor;
+    valueColor?: ValueColor;
+    [k: string]: unknown;
 }
 export interface LabelColor {
-  [k: string]: unknown;
+    [k: string]: unknown;
 }
 export interface ValueColor {
-  [k: string]: unknown;
+    [k: string]: unknown;
 }

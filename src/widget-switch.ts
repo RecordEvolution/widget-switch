@@ -27,6 +27,7 @@ export class WidgetSwitch extends LitElement {
     @state() private themeBgColor?: string
     @state() private themeTitleColor?: string
     @state() private themeSubtitleColor?: string
+    @state() private themePrimaryColor?: string
 
     version: string = 'versionplaceholder'
 
@@ -73,10 +74,12 @@ export class WidgetSwitch extends LitElement {
     registerTheme(theme?: Theme) {
         const cssTextColor = getComputedStyle(this).getPropertyValue('--re-text-color').trim()
         const cssBgColor = getComputedStyle(this).getPropertyValue('--re-tile-background-color').trim()
+        const cssPrimaryColor = getComputedStyle(this).getPropertyValue('--re-primary-color').trim()
         this.themeBgColor = cssBgColor || this.theme?.theme_object?.backgroundColor
         this.themeTitleColor = cssTextColor || this.theme?.theme_object?.title?.textStyle?.color
         this.themeSubtitleColor =
             cssTextColor || this.theme?.theme_object?.title?.subtextStyle?.color || this.themeTitleColor
+        this.themePrimaryColor = cssPrimaryColor || this.theme?.theme_object?.color?.[0] || '#5470c6'
     }
 
     applyData() {}
@@ -202,7 +205,7 @@ export class WidgetSwitch extends LitElement {
             flex-direction: column;
             height: 100%;
             width: 100%;
-            padding: 16px;
+            padding: 2cqh 2cqw;
             box-sizing: border-box;
         }
 
@@ -241,7 +244,40 @@ export class WidgetSwitch extends LitElement {
             align-items: center;
             gap: 12px;
             box-sizing: border-box;
-            /* border-left: 4px solid #ddd; */
+        }
+
+        md-switch {
+            --md-switch-selected-handle-color: var(--switch-primary-color, #5470c6);
+            --md-switch-selected-hover-handle-color: var(--switch-primary-color, #5470c6);
+            --md-switch-selected-focus-handle-color: var(--switch-primary-color, #5470c6);
+            --md-switch-selected-pressed-handle-color: var(--switch-primary-color, #5470c6);
+            --md-switch-selected-track-color: color-mix(
+                in srgb,
+                var(--switch-primary-color, #5470c6) 40%,
+                transparent
+            );
+            --md-switch-selected-hover-track-color: color-mix(
+                in srgb,
+                var(--switch-primary-color, #5470c6) 50%,
+                transparent
+            );
+            --md-switch-selected-focus-track-color: color-mix(
+                in srgb,
+                var(--switch-primary-color, #5470c6) 50%,
+                transparent
+            );
+            --md-switch-selected-pressed-track-color: color-mix(
+                in srgb,
+                var(--switch-primary-color, #5470c6) 50%,
+                transparent
+            );
+            --md-switch-unselected-handle-color: var(--switch-text-color, #464646);
+            --md-switch-unselected-track-color: color-mix(
+                in srgb,
+                var(--switch-text-color, #464646) 20%,
+                transparent
+            );
+            --md-switch-unselected-track-outline-color: var(--switch-text-color, #464646);
         }
 
         .no-data {
@@ -259,7 +295,9 @@ export class WidgetSwitch extends LitElement {
         return html`
             <div
                 class="wrapper"
-                style="background-color: ${this.themeBgColor}; color: ${this.themeTitleColor}"
+                style="background-color: ${this.themeBgColor}; color: ${this
+                    .themeTitleColor}; --switch-primary-color: ${this
+                    .themePrimaryColor}; --switch-text-color: ${this.themeTitleColor}"
             >
                 <header>
                     <h3 class="paging" ?active=${this.inputData?.title}>${this.inputData?.title}</h3>
@@ -281,7 +319,7 @@ export class WidgetSwitch extends LitElement {
                                 <div class="switch" label="${label}">
                                     ${label}
                                     <label
-                                        ><mdif3-switch
+                                        ><md-switch
                                             aria-label="${label}"
                                             ?selected="${!!ds.selected}"
                                             .actionApp="${ds?.actionApp}"
@@ -289,7 +327,7 @@ export class WidgetSwitch extends LitElement {
                                             .actionTopic="${ds?.actionTopic}"
                                             .label="${label}"
                                             @change="${this.handleActionSubmit}"
-                                        ></mdif3-switch
+                                        ></md-switch
                                     ></label>
                                 </div>
                             `
