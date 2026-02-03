@@ -1,19 +1,23 @@
 {
     "title": "InputData",
+    "description": "A toggle switch widget for displaying and controlling binary device states. Use this widget to show ON/OFF status indicators that can also trigger device actions when clicked. Supports configurable state mapping to interpret various data values as ON, OFF, or UNKNOWN states. When connected to a device action, clicking the switch sends commands to control physical devices or trigger backend operations. Multiple switches can be displayed in one widget. Ideal for IoT device control panels, smart home interfaces, equipment control dashboards, or any scenario requiring visual toggle controls with action capabilities.",
     "type": "object",
     "properties": {
         "title": {
             "title": "Title",
+            "description": "The main heading displayed above the switch controls. Use to describe the control group (e.g., 'Light Controls', 'Pump Switches').",
             "type": "string",
             "order": 1
         },
         "subTitle": {
             "title": "Subtitle",
+            "description": "Secondary text displayed below the title. Use for additional context like location, device group, or instructions.",
             "type": "string",
             "order": 2
         },
         "dataseries": {
             "title": "Switches",
+            "description": "Array of switch configurations. Each entry creates a toggle switch with its own state mapping and optional device action binding.",
             "type": "array",
             "order": 3,
             "items": {
@@ -21,26 +25,26 @@
                 "properties": {
                     "label": {
                         "title": "Label",
-                        "description": "The label for the switch.",
+                        "description": "Display text identifying this switch. Should clearly describe what the switch controls (e.g., 'Main Power', 'Pump 1', 'Night Mode').",
                         "type": "string",
                         "order": 1
                     },
                     "stateMap": {
                         "title": "State Map",
-                        "description": "Specify the values for the ON and OFF states. Any value that does not match to either an ON or OFF state will be considered as UNKNOWN.",
+                        "description": "Defines how data values are interpreted as switch states. Configure which values represent ON and OFF. Values not matching either state display as UNKNOWN (neutral position).",
                         "type": "object",
                         "required": true,
                         "order": 2,
                         "properties": {
                             "on": {
                                 "title": "ON Values",
-                                "description": "The value or list of values that represent the ON state. You can also use an expression like <4 or >33 to specify a numeric range. If a value matches an ON and an OFF state, the ON state will be used.",
+                                "description": "Values that indicate the ON state. Can be: a single value ('1', 'true', 'ON'), comma-separated list ('1,true,ON'), or numeric expression ('<4' means values below 4 are ON, '>33' means values above 33 are ON). If a value matches both ON and OFF, ON takes precedence.",
                                 "type": "string",
                                 "required": true
                             },
                             "off": {
                                 "title": "OFF Values",
-                                "description": "The value or list of values that represent the OFF state. You can also use an expression like <4 or >33 to specify a numeric range. If a value matches an ON and an OFF state, the ON state will be used.",
+                                "description": "Values that indicate the OFF state. Can be: a single value ('0', 'false', 'OFF'), comma-separated list ('0,false,OFF'), or numeric expression ('<4' means values below 4 are OFF, '>33' means values above 33 are OFF). Values matching neither ON nor OFF show as UNKNOWN.",
                                 "type": "string",
                                 "required": true
                             }
@@ -49,43 +53,45 @@
                     "value": {
                         "title": "Switch State",
                         "type": "string",
-                        "description": "Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch visual state consistent with its physical state.",
+                        "description": "The current state value from the backend, used to display the correct switch position. Strongly recommended to bind this to the actual device state column to keep the visual state synchronized with the physical device state.",
                         "required": false,
                         "order": 3
                     },
                     "actionDevice": {
                         "title": "Action Device Target",
-                        "description": "The device that should handle the click on the switch. The 'Device ID' column can be used here when using data driven mode.",
+                        "description": "The device that receives commands when the switch is clicked. In data-driven mode, bind to a 'Device ID' column to dynamically target different devices per row.",
                         "type": "actionDevice",
                         "order": 4
                     },
                     "actionApp": {
                         "title": "Action App",
-                        "description": "The app that should handle the click on the switch.",
+                        "description": "The application/service on the target device that handles the switch command. Select from available apps installed on the device.",
                         "dataDrivenDisabled": true,
                         "type": "actionApp",
                         "order": 5
                     },
                     "actionTopic": {
                         "title": "Action App Topic",
-                        "description": "The action topic that is called at the selected app at the selected device when clicking the switch. The arguments will be True for 'ON' and False for 'OFF'. Refer to the documentation of the app for available topics to call.",
+                        "description": "The specific command/topic sent to the app when the switch is clicked. Arguments sent are: True for turning ON, False for turning OFF. Refer to the app's documentation for available topics.",
                         "type": "string",
                         "order": 6
                     },
                     "styling": {
                         "title": "Styling",
-                        "description": "",
+                        "description": "Visual styling options for the switch and its label.",
                         "type": "object",
                         "order": 9,
                         "properties": {
                             "labelColor": {
                                 "title": "Label Color",
+                                "description": "Color of the switch label text.",
                                 "type": "color",
                                 "color": true,
                                 "order": 4
                             },
                             "valueColor": {
                                 "title": "Value Color",
+                                "description": "Color of the state value text displayed with the switch.",
                                 "type": "color",
                                 "color": true,
                                 "order": 5
