@@ -5,28 +5,37 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+/**
+ * The main heading displayed above the switch controls. Use to describe the control group (e.g., 'Light Controls', 'Pump Switches').
+ */
 export type Title = string;
+/**
+ * Secondary text displayed below the title. Use for additional context like location, device group, or instructions.
+ */
 export type Subtitle = string;
 /**
- * The label for the switch.
+ * Display text identifying this switch. Should clearly describe what the switch controls (e.g., 'Main Power', 'Pump 1', 'Night Mode').
  */
 export type Label = string;
 /**
- * The value or list of values that represent the ON state. You can also use an expression like <4 or >33 to specify a numeric range. If a value matches an ON and an OFF state, the ON state will be used.
+ * Values that indicate the ON state. Can be: a single value ('1', 'true', 'ON'), comma-separated list ('1,true,ON'), or numeric expression ('<4' means values below 4 are ON, '>33' means values above 33 are ON). If a value matches both ON and OFF, ON takes precedence.
  */
 export type ONValues = string;
 /**
- * The value or list of values that represent the OFF state. You can also use an expression like <4 or >33 to specify a numeric range. If a value matches an ON and an OFF state, the ON state will be used.
+ * Values that indicate the OFF state. Can be: a single value ('0', 'false', 'OFF'), comma-separated list ('0,false,OFF'), or numeric expression ('<4' means values below 4 are OFF, '>33' means values above 33 are OFF). Values matching neither ON nor OFF show as UNKNOWN.
  */
 export type OFFValues = string;
 /**
- * Is not strictly required, but is strongly recommended to be connected to the backend column that represents the switch state. This keeps the switch visual state consistent with its physical state.
+ * The current state value from the backend, used to display the correct switch position. Strongly recommended to bind this to the actual device state column to keep the visual state synchronized with the physical device state.
  */
 export type SwitchState = string;
 /**
- * The action topic that is called at the selected app at the selected device when clicking the switch. The arguments will be True for 'ON' and False for 'OFF'. Refer to the documentation of the app for available topics to call.
+ * The specific command/topic sent to the app when the switch is clicked. Arguments sent are: True for turning ON, False for turning OFF. Refer to the app's documentation for available topics.
  */
 export type ActionAppTopic = string;
+/**
+ * Array of switch configurations. Each entry creates a toggle switch with its own state mapping and optional device action binding.
+ */
 export type Switches = {
     label?: Label;
     stateMap?: StateMap;
@@ -38,6 +47,9 @@ export type Switches = {
     [k: string]: unknown;
 }[];
 
+/**
+ * A toggle switch widget for displaying and controlling binary device states. Use this widget to show ON/OFF status indicators that can also trigger device actions when clicked. Supports configurable state mapping to interpret various data values as ON, OFF, or UNKNOWN states. When connected to a device action, clicking the switch sends commands to control physical devices or trigger backend operations. Multiple switches can be displayed in one widget. Ideal for IoT device control panels, smart home interfaces, equipment control dashboards, or any scenario requiring visual toggle controls with action capabilities.
+ */
 export interface InputData {
     title?: Title;
     subTitle?: Subtitle;
@@ -45,7 +57,7 @@ export interface InputData {
     [k: string]: unknown;
 }
 /**
- * Specify the values for the ON and OFF states. Any value that does not match to either an ON or OFF state will be considered as UNKNOWN.
+ * Defines how data values are interpreted as switch states. Configure which values represent ON and OFF. Values not matching either state display as UNKNOWN (neutral position).
  */
 export interface StateMap {
     on?: ONValues;
@@ -53,25 +65,34 @@ export interface StateMap {
     [k: string]: unknown;
 }
 /**
- * The device that should handle the click on the switch. The 'Device ID' column can be used here when using data driven mode.
+ * The device that receives commands when the switch is clicked. In data-driven mode, bind to a 'Device ID' column to dynamically target different devices per row.
  */
 export interface ActionDeviceTarget {
     [k: string]: unknown;
 }
 /**
- * The app that should handle the click on the switch.
+ * The application/service on the target device that handles the switch command. Select from available apps installed on the device.
  */
 export interface ActionApp {
     [k: string]: unknown;
 }
+/**
+ * Visual styling options for the switch and its label.
+ */
 export interface Styling {
     labelColor?: LabelColor;
     valueColor?: ValueColor;
     [k: string]: unknown;
 }
+/**
+ * Color of the switch label text.
+ */
 export interface LabelColor {
     [k: string]: unknown;
 }
+/**
+ * Color of the state value text displayed with the switch.
+ */
 export interface ValueColor {
     [k: string]: unknown;
 }
