@@ -50,7 +50,7 @@ export type Switches = {
 /**
  * A toggle switch widget for displaying and controlling binary device states. Use this widget to show ON/OFF status indicators that can also trigger device actions when clicked. Supports configurable state mapping to interpret various data values as ON, OFF, or UNKNOWN states. When connected to a device action, clicking the switch sends commands to control physical devices or trigger backend operations. Multiple switches can be displayed in one widget. Ideal for IoT device control panels, smart home interfaces, equipment control dashboards, or any scenario requiring visual toggle controls with action capabilities.
  */
-export interface InputData {
+export interface SwitchConfiguration {
     title?: Title;
     subTitle?: Subtitle;
     dataseries?: Switches;

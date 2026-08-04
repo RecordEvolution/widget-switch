@@ -1,6 +1,21 @@
 {
-    "title": "InputData",
+    "title": "Switch Configuration",
     "description": "A toggle switch widget for displaying and controlling binary device states. Use this widget to show ON/OFF status indicators that can also trigger device actions when clicked. Supports configurable state mapping to interpret various data values as ON, OFF, or UNKNOWN states. When connected to a device action, clicking the switch sends commands to control physical devices or trigger backend operations. Multiple switches can be displayed in one widget. Ideal for IoT device control panels, smart home interfaces, equipment control dashboards, or any scenario requiring visual toggle controls with action capabilities.",
+    "aiSelection": {
+        "dataShape": "One value per switch, interpreted as ON or OFF through stateMap, plus an optional device or app action and topic fired on click. Both displays and controls.",
+        "useWhen": [
+            "A binary device state should be shown and changed from the dashboard — a pump, a light, a valve, an enable flag.",
+            "An operator needs a control, not only a readout.",
+            "Several related toggles belong together in one control panel."
+        ],
+        "notFor": [
+            "A status the user must not be able to change — use widget-signal, which is display-only.",
+            "More than two states — use widget-signal for the indicator, or widget-scada for an industrial symbol.",
+            "Values that are entered and stored rather than commanded — use widget-form.",
+            "The history of the switching — use widget-statehistory.",
+            "A tank, valve or pump that should be drawn as itself and animated — use widget-scada."
+        ]
+    },
     "type": "object",
     "properties": {
         "title": {

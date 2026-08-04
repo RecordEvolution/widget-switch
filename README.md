@@ -29,7 +29,7 @@ npm i @record-evolution/widget-switch
 The widget accepts an `inputData` property with the following structure:
 
 ```typescript
-interface InputData {
+interface SwitchConfiguration {
     title?: string
     subTitle?: string
     dataseries?: Array<{

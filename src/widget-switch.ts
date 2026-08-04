@@ -1,11 +1,11 @@
 import { html, css, LitElement, PropertyValueMap } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { customElement, property, state } from 'lit/decorators.js'
-import { InputData } from './definition-schema.js'
+import { SwitchConfiguration } from './definition-schema.js'
 import '@material/web/switch/switch.js'
 import { MdSwitch } from '@material/web/switch/switch.js'
 
-type Dataseries = Exclude<InputData['dataseries'], undefined>[number] & { needleValue?: number }
+type Dataseries = Exclude<SwitchConfiguration['dataseries'], undefined>[number] & { needleValue?: number }
 type Theme = {
     theme_name: string
     theme_object: any
@@ -13,7 +13,7 @@ type Theme = {
 @customElement('widget-switch-versionplaceholder')
 export class WidgetSwitch extends LitElement {
     @property({ type: Object })
-    inputData?: InputData
+    inputData?: SwitchConfiguration
 
     @property({ type: Object })
     theme?: Theme
