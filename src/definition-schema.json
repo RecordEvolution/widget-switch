@@ -44,12 +44,18 @@
                         "type": "string",
                         "order": 1
                     },
+                    "description": {
+                        "title": "Hint Text",
+                        "description": "Helper text displayed below the switch label to guide the operator. Use for what the switch does, when it is safe to flip it, or how long the action takes.",
+                        "type": "string",
+                        "order": 2
+                    },
                     "stateMap": {
                         "title": "State Map",
                         "description": "Defines how data values are interpreted as switch states. Configure which values represent ON and OFF. Values not matching either state display as UNKNOWN (neutral position).",
                         "type": "object",
                         "required": true,
-                        "order": 2,
+                        "order": 3,
                         "properties": {
                             "on": {
                                 "title": "ON Values",
@@ -70,48 +76,26 @@
                         "type": "string",
                         "description": "The current state value from the backend, used to display the correct switch position. Strongly recommended to bind this to the actual device state column to keep the visual state synchronized with the physical device state.",
                         "required": false,
-                        "order": 3
+                        "order": 4
                     },
                     "actionDevice": {
                         "title": "Action Device Target",
                         "description": "The device that receives commands when the switch is clicked. In data-driven mode, bind to a 'Device ID' column to dynamically target different devices per row.",
                         "type": "actionDevice",
-                        "order": 4
+                        "order": 5
                     },
                     "actionApp": {
                         "title": "Action App",
                         "description": "The application/service on the target device that handles the switch command. Select from available apps installed on the device.",
                         "dataDrivenDisabled": true,
                         "type": "actionApp",
-                        "order": 5
+                        "order": 6
                     },
                     "actionTopic": {
                         "title": "Action App Topic",
                         "description": "The specific command/topic sent to the app when the switch is clicked. Arguments sent are: True for turning ON, False for turning OFF. Refer to the app's documentation for available topics.",
                         "type": "string",
-                        "order": 6
-                    },
-                    "styling": {
-                        "title": "Styling",
-                        "description": "Visual styling options for the switch and its label.",
-                        "type": "object",
-                        "order": 9,
-                        "properties": {
-                            "labelColor": {
-                                "title": "Label Color",
-                                "description": "Color of the switch label text.",
-                                "type": "color",
-                                "color": true,
-                                "order": 4
-                            },
-                            "valueColor": {
-                                "title": "Value Color",
-                                "description": "Color of the state value text displayed with the switch.",
-                                "type": "color",
-                                "color": true,
-                                "order": 5
-                            }
-                        }
+                        "order": 7
                     }
                 }
             }

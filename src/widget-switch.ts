@@ -101,11 +101,11 @@ export class WidgetSwitch extends LitElement {
                 }
                 const pds: Dataseries = {
                     label: label,
+                    description: ds?.description,
                     actionApp: ds?.actionApp,
                     actionDevice: ds?.actionDevice,
                     actionTopic: ds?.actionTopic,
                     multiChart: ds.multiChart,
-                    styling: ds.styling,
                     selected: this.isSelected(ds)
                 }
                 this.dataSets.set(pds.label ?? '', pds)
@@ -246,6 +246,22 @@ export class WidgetSwitch extends LitElement {
             box-sizing: border-box;
         }
 
+        .switch-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            max-width: 300px;
+            line-height: 1.2;
+        }
+
+        .switch-hint {
+            font-size: 12px;
+            line-height: 15px;
+            opacity: 0.75;
+            overflow-wrap: anywhere;
+        }
+
         md-switch {
             --md-switch-selected-handle-color: var(--switch-primary-color, #5470c6);
             --md-switch-selected-hover-handle-color: var(--switch-primary-color, #5470c6);
@@ -317,7 +333,15 @@ export class WidgetSwitch extends LitElement {
                         ([label, ds]) => {
                             return html`
                                 <div class="switch" label="${label}">
-                                    ${label}
+                                    <div class="switch-text">
+                                        <span class="switch-label">${label}</span>
+                                        <span
+                                            class="switch-hint paging"
+                                            ?active=${!!ds.description}
+                                            style="color: ${this.themeSubtitleColor}"
+                                            >${ds.description}</span
+                                        >
+                                    </div>
                                     <label
                                         ><md-switch
                                             aria-label="${label}"

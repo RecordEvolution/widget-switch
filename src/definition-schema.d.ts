@@ -18,6 +18,10 @@ export type Subtitle = string;
  */
 export type Label = string;
 /**
+ * Helper text displayed below the switch label to guide the operator. Use for what the switch does, when it is safe to flip it, or how long the action takes.
+ */
+export type HintText = string;
+/**
  * Values that indicate the ON state. Can be: a single value ('1', 'true', 'ON'), comma-separated list ('1,true,ON'), or numeric expression ('<4' means values below 4 are ON, '>33' means values above 33 are ON). If a value matches both ON and OFF, ON takes precedence.
  */
 export type ONValues = string;
@@ -38,12 +42,12 @@ export type ActionAppTopic = string;
  */
 export type Switches = {
     label?: Label;
+    description?: HintText;
     stateMap?: StateMap;
     value?: SwitchState;
     actionDevice?: ActionDeviceTarget;
     actionApp?: ActionApp;
     actionTopic?: ActionAppTopic;
-    styling?: Styling;
     [k: string]: unknown;
 }[];
 
@@ -74,25 +78,5 @@ export interface ActionDeviceTarget {
  * The application/service on the target device that handles the switch command. Select from available apps installed on the device.
  */
 export interface ActionApp {
-    [k: string]: unknown;
-}
-/**
- * Visual styling options for the switch and its label.
- */
-export interface Styling {
-    labelColor?: LabelColor;
-    valueColor?: ValueColor;
-    [k: string]: unknown;
-}
-/**
- * Color of the switch label text.
- */
-export interface LabelColor {
-    [k: string]: unknown;
-}
-/**
- * Color of the state value text displayed with the switch.
- */
-export interface ValueColor {
     [k: string]: unknown;
 }
