@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run watch` — Library build in watch mode without dev server.
 - `npm run types` — Regenerate `src/definition-schema.d.ts` from `src/definition-schema.json` via `json2ts` (requires `json-schema-to-typescript` installed globally or via `npx`; the script uses `cat | json2ts`).
 - `npm run analyze` — Generate Custom Elements Manifest via `@custom-elements-manifest/analyzer --litelement`.
-- `npm run release` — Build, regenerate types, `npm version patch` (no `v` tag prefix), push commits + tag. The pushed tag triggers `.github/workflows/build-publish.yml`, which publishes to npm and creates a GitHub Release.
+- `npm run release` — `npm version patch`: preflight guards (on `main`, clean tree, not behind `origin/main`, generated files current, build passes), then commit, bare-semver tag, `git push --follow-tags`, then waits on the CI run and fails if the npm publish fails. `npm run release:minor` / `release:major` for other bumps.
 - `npm run link` / `npm run unlink` — Local-link this package into the sibling `../RESWARM/frontend` project.
 - No test runner is configured.
 - Engines: Node `>=24.9.0`, npm `>=10.0.2`.
