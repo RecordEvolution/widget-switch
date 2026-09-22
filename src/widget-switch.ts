@@ -72,14 +72,10 @@ export class WidgetSwitch extends LitElement {
     }
 
     registerTheme(theme?: Theme) {
-        const cssTextColor = getComputedStyle(this).getPropertyValue('--re-text-color').trim()
-        const cssBgColor = getComputedStyle(this).getPropertyValue('--re-tile-background-color').trim()
-        const cssPrimaryColor = getComputedStyle(this).getPropertyValue('--re-primary-color').trim()
-        this.themeBgColor = cssBgColor || this.theme?.theme_object?.backgroundColor
-        this.themeTitleColor = cssTextColor || this.theme?.theme_object?.title?.textStyle?.color
-        this.themeSubtitleColor =
-            cssTextColor || this.theme?.theme_object?.title?.subtextStyle?.color || this.themeTitleColor
-        this.themePrimaryColor = cssPrimaryColor || this.theme?.theme_object?.color?.[0] || '#5470c6'
+        this.themeBgColor = `var(--re-tile-background-color, ${this.theme?.theme_object?.backgroundColor || 'transparent'})`
+        this.themeTitleColor = `var(--re-text-color, ${this.theme?.theme_object?.title?.textStyle?.color || 'inherit'})`
+        this.themeSubtitleColor = `var(--re-text-color, ${this.theme?.theme_object?.title?.subtextStyle?.color || this.theme?.theme_object?.title?.textStyle?.color || 'inherit'})`
+        this.themePrimaryColor = `var(--re-primary-color, ${this.theme?.theme_object?.color?.[0] || '#5470c6'})`
     }
 
     applyData() {}
